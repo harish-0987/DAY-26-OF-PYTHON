@@ -1,313 +1,285 @@
-# Day 25: Object-Oriented Programming (OOP) - Polymorphism in Python 🎭🐍
+# Day 26: Object-Oriented Programming (OOP) - Encapsulation in Python 🔒💊🐍
 
 > **Motto**: *"Not here to be known, here to build."*  
 > **Author**: Harish  
-> **Repository**: [DAY-25-OF-PYTHON](https://github.com/harish-0987/DAY-25-OF-PYTHON)
+> **Repository**: [DAY-26-OF-PYTHON](https://github.com/harish-0987/DAY-26-OF-PYTHON)
 
-Welcome to **Day 25 of Python**! Today's session is focused on **Polymorphism in Python** at a clear, practical, beginner-friendly foundational level.
+Welcome to **Day 26 of Python**! Today's session is dedicated to **Encapsulation in Python**—one of the core pillars of Object-Oriented Programming (OOP)—explored at a clear, practical, beginner-friendly foundational level.
 
 > [!NOTE]
-> **Scope for Today**: We explore the core concept of **Polymorphism** ("many forms") in Python OOP. We cover built-in polymorphism, Duck Typing, runtime method overriding, polymorphic functions, operator overloading with dunder methods, method overloading workarounds, and a real-world multi-payment gateway case study.
+> **Scope for Today**: We demystify the concept of **Encapsulation** (bundling data and methods while restricting direct access), the real-world analogies (medical capsule, bank vault, ATM), access modifiers in Python (Public, Protected `_`, and Private `__`), Name Mangling, traditional getter/setter validation, Pythonic property decorators (`@property`, `@setter`, `@deleter`), private internal helper methods, and a complete real-world banking wallet case study.
 
 ---
 
 ## 📌 Table of Contents
 
-1. [What is Polymorphism? (Basic Level)](#-what-is-polymorphism-basic-level)
-2. [Why Use Polymorphism?](#-why-use-polymorphism)
-3. [The 4 Dimensions of Polymorphism in Python](#-the-4-dimensions-of-polymorphism-in-python)
-   - [1. Built-in Polymorphism (Functions & Operators)](#1-built-in-polymorphism-functions--operators)
-   - [2. Duck Typing (Polymorphism Without Inheritance)](#2-duck-typing-polymorphism-without-inheritance)
-   - [3. Method Overriding (Inheritance-Based Runtime Polymorphism)](#3-method-overriding-inheritance-based-runtime-polymorphism)
-   - [4. Polymorphism via Common Functions / Interfaces](#4-polymorphism-via-common-functions--interfaces)
-4. [Operator Overloading (Syntactic Polymorphism)](#-operator-overloading-syntactic-polymorphism)
-5. [Method Overloading in Python (Workarounds)](#-method-overloading-in-python-workarounds)
-6. [Real-World Project: Multi-Payment Checkout System](#-real-world-project-multi-payment-checkout-system)
-7. [Quick Summary Comparison Table](#-quick-summary-comparison-table)
-8. [Code Implementation & Running the Code](#-code-implementation--running-the-code)
+1. [What is Encapsulation? (Basic Level)](#-what-is-encapsulation-basic-level)
+2. [Why Use Encapsulation?](#-why-use-encapsulation)
+3. [Access Modifiers in Python](#-access-modifiers-in-python)
+   - [1. Public Members](#1-public-members)
+   - [2. Protected Members (`_single_underscore`)](#2-protected-members-_single_underscore)
+   - [3. Private Members (`__double_underscore`) & Name Mangling](#3-private-members-__double_underscore--name-mangling)
+4. [Controlling Access: Traditional Getters & Setters](#-controlling-access-traditional-getters--setters)
+5. [Pythonic Encapsulation with `@property` Decorator](#-pythonic-encapsulation-with-property-decorator)
+6. [Private Helper Methods (Hiding Internal Logic)](#-private-helper-methods-hiding-internal-logic)
+7. [Real-World Project: Secure Bank Account & Smart Wallet](#-real-world-project-secure-bank-account--smart-wallet)
+8. [Quick Summary Comparison Matrix](#-quick-summary-comparison-matrix)
+9. [Code Implementation & Running the Code](#-code-implementation--running-the-code)
 
 ---
 
-## 💡 What is Polymorphism? (Basic Level)
+## 💡 What is Encapsulation? (Basic Level)
 
-The word **Polymorphism** comes from two Greek words:
-- **Poly**: Many
-- **Morph**: Forms / Shapes
-
-In Object-Oriented Programming, **Polymorphism** is the ability of different objects to respond to the **same method call** (or operator) in their own customized, specific way.
-
-### 🎭 Real-World Analogy
-Think of a person:
-- At home with family, they act as a **parent** or **child**.
-- At work in the office, they act as an **employee**.
-- At a shopping mall, they act as a **customer**.
-
-The **same person** takes on **many forms and behaviors** depending on the context!
+**Encapsulation** is the mechanism of wrapping data (attributes/variables) and the code that operates on that data (methods/functions) together into a single unit (a class), while simultaneously restricting direct unauthorized access to internal state.
 
 ```
-                      ┌────────────────────────┐
-                      │   Same Method Call:    │
-                      │       .speak()         │
-                      └───────────┬────────────┘
-                                  │
-         ┌────────────────────────┼────────────────────────┐
-         ▼                        ▼                        ▼
-┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
-│       Dog       │      │       Cat       │      │       Cow       │
-│  "Woof! Woof!"  │      │  "Meow! Purr!"  │      │   "Moo! Moo!"   │
-└─────────────────┘      └─────────────────┘      └─────────────────┘
+       ┌────────────────────────────────────────────────────────┐
+       │                       CLASS                            │
+       │                                                        │
+       │   ┌────────────────────────────────────────────────┐   │
+       │   │  PRIVATE DATA (Protected Internal State)       │   │
+       │   │  • __balance                                   │   │
+       │   │  • __pin                                       │   │
+       │   │  • __transaction_history                       │   │
+       │   └───────────────────────▲────────────────────────┘   │
+       │                           │ Controlled Access          │
+       │   ┌───────────────────────▼────────────────────────┐   │
+       │   │  PUBLIC INTERFACE (Methods & Properties)       │   │
+       │   │  • deposit(amount)                             │   │
+       │   │  • withdraw(amount, pin)                       │   │
+       │   │  • check_balance(pin)                          │   │
+       │   └───────────────────────▲────────────────────────┘   │
+       └───────────────────────────┼────────────────────────────┘
+                                   │
+                           EXTERNAL CALLER
+                        (Cannot tamper with data)
 ```
 
----
+### 💊 Real-World Analogies
 
-## 🚀 Why Use Polymorphism?
-
-1. **Loose Coupling**: Calling code doesn't need to know the exact class type of an object; it only needs to know that the object responds to the required method.
-2. **Extensibility**: You can introduce brand-new classes into your application without rewriting or modifying existing consumer functions.
-3. **Cleaner Code**: Removes bloated chains of `if-elif-else isinstance(...)` checks.
-4. **Consistency**: Uniform method naming across related and unrelated components.
-
----
-
-## ⚙️ The 4 Dimensions of Polymorphism in Python
-
-### 1. Built-in Polymorphism (Functions & Operators)
-Python has polymorphism natively integrated into standard functions and operators:
-
-- **`len()` function**:
-  - `len("Python")` -> Calculates number of characters (`6`)
-  - `len([1, 2, 3])` -> Calculates number of list elements (`3`)
-  - `len({"a": 1, "b": 2})` -> Calculates number of dictionary keys (`2`)
-
-- **`+` operator**:
-  - `10 + 20` -> Performs numerical addition (`30`)
-  - `"Hello, " + "World"` -> Performs string concatenation (`Hello, World`)
-  - `[1, 2] + [3, 4]` -> Performs list merging (`[1, 2, 3, 4]`)
+1. **Medical Capsule**:
+   - The capsule shell packages multiple medicinal powders together. You consume the pill safely as a unit without tampering with the individual chemical particles inside.
+2. **ATM / Bank Vault**:
+   - You cannot walk directly into a bank vault and pick up cash. Instead, you interact with authorized public entry points: insert card, enter PIN, choose deposit or withdrawal. The internal vault stays secure.
+3. **Automobile Dashboard**:
+   - You drive a car using the steering wheel, accelerator, and brake pedals. You don't directly adjust fuel injection lines or combustion chambers while driving.
 
 ---
 
-### 2. Duck Typing (Polymorphism Without Inheritance)
-> *"If it walks like a duck and quacks like a duck, it's a duck."*
+## 🚀 Why Use Encapsulation?
 
-In Python's dynamic type system, classes do **not** need to inherit from the same parent to behave polymorphically. If an object has the expected method name, Python will call it:
+1. **Data Hiding & Security**: Keeps internal sensitive data safe from external corruption or accidental modification.
+2. **Data Integrity & Validation**: Setters validate inputs before accepting changes (e.g., negative balance rejection, age > 0).
+3. **Flexibility & Read-Only Attributes**: Easily create read-only properties by providing a getter without a setter.
+4. **Maintainability & Modularity**: You can refactor or optimize internal algorithms without breaking any client code that relies on your public interface.
+
+---
+
+## 🔒 Access Modifiers in Python
+
+Unlike languages like Java or C++ that feature strict keywords (`public`, `protected`, `private`), Python relies on **naming conventions with underscores**:
+
+| Access Level | Naming Convention | Example | Accessibility |
+| :--- | :--- | :--- | :--- |
+| **Public** | Standard name | `self.name` | Accessible anywhere (inside, subclasses, outside) |
+| **Protected** | Single leading underscore | `self._founded_year` | Convention: Accessible inside class & subclasses |
+| **Private** | Double leading underscore | `self.__secret_code` | Enforced via Name Mangling: Hidden from outside |
+
+---
+
+### 1. Public Members
+Public members are accessible from anywhere without restriction:
 
 ```python
-class Duck:
-    def sound(self):
-        print("Duck: Quack, quack!")
+class Student:
+    def __init__(self, name: str, roll_no: int):
+        self.name = name          # Public
+        self.roll_no = roll_no    # Public
 
-class Person:
-    def sound(self):
-        print("Person: Imitating quack!")
-
-class Robot:
-    def sound(self):
-        print("Robot: Beep-boop quack!")
-
-def play_sound(entity):
-    entity.sound()  # Duck typing: Works for any entity with sound()
+s = Student("Harish", 101)
+print(s.name)      # Read directly -> "Harish"
+s.roll_no = 102    # Modify directly
 ```
 
 ---
 
-### 3. Method Overriding (Inheritance-Based Runtime Polymorphism)
-When a child class re-implements a method already declared in its parent class:
+### 2. Protected Members (`_single_underscore`)
+In Python, prefixing an attribute or method with a single underscore `_` tells other programmers:
+> *"This is an internal/protected implementation detail. Please do not modify it directly outside this class or its subclasses."*
 
 ```python
-class Animal:
-    def make_sound(self):
-        return "Generic sound"
+class Company:
+    def __init__(self, name: str, year: int):
+        self.name = name
+        self._founded_year = year   # Protected attribute
 
-class Dog(Animal):
-    def make_sound(self):
-        return "Woof! Woof!"
-
-class Cat(Animal):
-    def make_sound(self):
-        return "Meow!"
+class Branch(Company):
+    def show_info(self):
+        # Accessible in subclass
+        print(f"{self.name} was founded in {self._founded_year}")
 ```
 
-When you loop over animals and invoke `animal.make_sound()`, Python dynamically calls the child's overridden version at runtime.
+> [!IMPORTANT]
+> Python does not physically prohibit external code from reading `obj._founded_year`. It relies on developer discipline and PEP 8 convention.
 
 ---
 
-### 4. Polymorphism via Common Functions / Interfaces
-Writing generic utility functions that accept any object satisfying an expected interface:
+### 3. Private Members (`__double_underscore`) & Name Mangling
+When you prefix an attribute or method with **two leading underscores** `__`:
+- Python restricts direct outside access and raises an `AttributeError`.
+- It activates **Name Mangling**: Python internally renames `__attribute` to `_ClassName__attribute`.
 
 ```python
-class Circle:
-    def __init__(self, radius):
-        self.radius = radius
-    def calculate_area(self):
-        return 3.14159 * (self.radius ** 2)
+class SafeBox:
+    def __init__(self, secret: str):
+        self.__secret_code = secret  # Private attribute
 
-class Rectangle:
-    def __init__(self, w, h):
-        self.w, self.h = w, h
-    def calculate_area(self):
-        return self.w * self.h
+box = SafeBox("CLASSIFIED-9988")
 
-def display_area(shape):
-    # Polymorphic function: doesn't care if shape is Circle or Rectangle
-    print(f"Calculated Area: {shape.calculate_area():.2f}")
+# Attempting direct access:
+# print(box.__secret_code) 
+# -> AttributeError: 'SafeBox' object has no attribute '__secret_code'
+
+# Name Mangling in action (behind the scenes):
+print(getattr(box, "_SafeBox__secret_code")) # "CLASSIFIED-9988"
 ```
 
 ---
 
-## ➕ Operator Overloading (Syntactic Polymorphism)
+## 🛠️ Controlling Access: Traditional Getters & Setters
 
-Python allows custom classes to define their own behavior for standard operators (`+`, `-`, `*`, `==`, `>`, etc.) using special **dunder (double underscore) methods**:
+Getters (*Accessors*) and Setters (*Mutators*) allow controlled inspection and modification of private attributes with validation rules:
 
-| Operator | Dunder Method | Purpose |
-| :--- | :--- | :--- |
-| `+` | `__add__(self, other)` | Addition / Combining |
-| `-` | `__sub__(self, other)` | Subtraction / Difference |
-| `*` | `__mul__(self, other)` | Multiplication / Scaling |
-| `==` | `__eq__(self, other)` | Equality comparison |
-| `>` | `__gt__(self, other)` | Greater-than comparison |
-| `<` | `__lt__(self, other)` | Less-than comparison |
-| `str()` / `print()` | `__str__(self)` | User-friendly string display |
-
-### Example: 2D Point Vector Addition
 ```python
-class Point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+class Employee:
+    def __init__(self, name: str, salary: float):
+        self.name = name
+        self.__salary = 0.0
+        self.set_salary(salary)
 
-    def __add__(self, other):
-        return Point(self.x + other.x, self.y + other.y)
+    # Getter
+    def get_salary(self) -> float:
+        return self.__salary
 
-    def __str__(self):
-        return f"Point({self.x}, {self.y})"
-
-p1 = Point(2, 3)
-p2 = Point(4, 5)
-print(p1 + p2)  # Output: Point(6, 8)
+    # Setter with validation
+    def set_salary(self, amount: float) -> None:
+        if amount <= 0:
+            print("Error: Salary must be positive!")
+            return
+        self.__salary = float(amount)
 ```
 
 ---
 
-## 🔀 Method Overloading in Python (Workarounds)
+## 🐍 Pythonic Encapsulation with `@property` Decorator
 
-In languages like C++ or Java, **Method Overloading** allows multiple methods with the exact same name but different parameter lists.
+Python provides `@property` so you can access methods using attribute syntax while still enforcing validation logic:
 
-> [!WARNING]
-> **Python Does NOT Natively Support Traditional Method Overloading!**  
-> If you write multiple methods with the same name in the same class, the **last defined method silently overwrites** all previous ones.
-
-### Pythonic Solutions for Overloading Behavior:
-1. **Default Parameter Values**:
-   ```python
-   def add(self, a, b, c=0):
-       return a + b + c
-   ```
-2. **Variable-Length Arguments (`*args`)**:
-   ```python
-   def sum_all(self, *args):
-       return sum(args)
-   ```
-3. **Optional Parameters with `None` Check**:
-   ```python
-   def greet(self, name=None):
-       if name:
-           return f"Hello, {name}!"
-       return "Hello, Guest!"
-   ```
-
----
-
-## 💳 Real-World Project: Multi-Payment Checkout System
-
-In enterprise web applications, checkout systems interact with dozens of payment gateways (Credit Card, PayPal, UPI, Crypto, Stripe). 
-
-Polymorphism allows the checkout engine to process any payment method through a single uniform `process_payment(amount)` interface:
-
-```
-                  ┌───────────────────────────────┐
-                  │        PaymentGateway         │
-                  │   process_payment(amount)     │
-                  └───────────────┬───────────────┘
-                                  │
-         ┌────────────────────────┼────────────────────────┐
-         ▼                        ▼                        ▼
-┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
-│ CreditCardPayment│    │  PayPalPayment   │    │    UPIPayment    │
-│  Validates CVV   │    │ Redirects Portal │    │  Verifies PIN    │
-└──────────────────┘    └──────────────────┘    └──────────────────┘
-```
-
-The checkout function:
 ```python
-def checkout(payment_method: PaymentGateway, amount: float):
-    print(f"Charging ${amount}...")
-    payment_method.process_payment(amount)
-    print("Order confirmed!")
+class TemperatureSensor:
+    def __init__(self, celsius: float):
+        self._celsius = 0.0
+        self.celsius = celsius  # Triggers setter validation
+
+    # Getter
+    @property
+    def celsius(self) -> float:
+        return self._celsius
+
+    # Setter with validation
+    @celsius.setter
+    def celsius(self, value: float) -> None:
+        if value < -273.15:
+            raise ValueError("Temperature cannot be below absolute zero (-273.15 C)!")
+        self._celsius = float(value)
+
+    # Read-Only Property (No setter defined)
+    @property
+    def fahrenheit(self) -> float:
+        return (self._celsius * 9 / 5) + 32
 ```
 
 ---
 
-## 📊 Quick Summary Comparison Table
+## 🔒 Private Helper Methods (Hiding Internal Logic)
 
-| Polymorphism Type | Mechanism | Inheritance Needed? | Example |
-| :--- | :--- | :---: | :--- |
-| **Built-in** | Language engine | No | `len("abc")`, `len([1, 2])`, `1 + 2`, `'a' + 'b'` |
-| **Duck Typing** | Dynamic method dispatch | No | Any object implementing `.sound()` or `.swim()` |
-| **Method Overriding** | Subclass redefines parent method | Yes | `Dog.make_sound()` overriding `Animal.make_sound()` |
-| **Operator Overloading** | Dunder magic methods | No | `p1 + p2` via `__add__()`, `b1 > b2` via `__gt__()` |
-| **Method Overloading** | Default args / `*args` | No | `calc.add(10, 20)` & `calc.add(10, 20, 30)` |
+Encapsulation extends to internal implementation methods. Public APIs coordinate multiple private steps:
+
+```python
+class EmailService:
+    def __init__(self, sender: str):
+        self.sender = sender
+
+    # Private helper method
+    def __authenticate_smtp(self) -> bool:
+        return True
+
+    # Public interface
+    def send_email(self, recipient: str, message: str) -> bool:
+        if not self.__authenticate_smtp():
+            return False
+        print(f"Email sent to {recipient}!")
+        return True
+```
+
+---
+
+## 🏦 Real-World Project: Secure Bank Account & Smart Wallet
+
+A full-scale implementation integrating all encapsulation principles:
+- **Public**: `holder_name`, `account_type`
+- **Read-Only Properties**: `account_number` (masked), `account_tier`
+- **Protected**: `_tier`
+- **Private**: `__balance`, `__pin`, `__transaction_history`
+- **Controlled Methods**: `deposit()`, `withdraw()`, `check_balance()`, `change_pin()`, `print_mini_statement()`
+
+```
+-----------------------------------------------------------------
+ MINI-STATEMENT: Harish (*******1098)
+ Tier: Gold | Available Balance: $6,300.00
+-----------------------------------------------------------------
+Timestamp            | Type            | Amount     | Balance
+-----------------------------------------------------------------
+2026-10-03 21:13:14  | OPENING_DEPOSIT | $6000.00   | $6,000.00
+2026-10-03 21:13:14  | DEPOSIT         | $1500.00   | $7,500.00
+2026-10-03 21:13:14  | WITHDRAWAL      | $1200.00   | $6,300.00
+-----------------------------------------------------------------
+```
+
+---
+
+## 📊 Quick Summary Comparison Matrix
+
+| Feature | Public | Protected (`_`) | Private (`__`) | Property (`@property`) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Syntax** | `self.val` | `self._val` | `self.__val` | `@property` / `@val.setter` |
+| **Accessible Inside Class?** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Accessible in Subclasses?**| ✅ Yes | ✅ Yes | ❌ No (Name mangled) | ✅ Yes |
+| **Accessible Outside?** | ✅ Yes | ⚠️ By convention only | ❌ No (AttributeError) | ✅ Controlled via methods |
+| **Validation Enabled?** | ❌ No | ❌ No | ❌ No | ✅ Yes (in setter) |
+| **Primary Use Case** | General API | Internal class state | Sensitive & hidden state | Pythonic controlled access |
 
 ---
 
 ## 💻 Code Implementation & Running the Code
 
-The complete source code is provided in [`day25.py`](file:///c:/Users/pedda/OneDrive/Desktop/python%201/day25.py).
-
-### How to Run:
+### Clone or Pull the Repository
 ```bash
-python day25.py
+git clone https://github.com/harish-0987/DAY-26-OF-PYTHON.git
+cd DAY-26-OF-PYTHON
 ```
 
-### Sample Output:
-```text
-======================================================================
- DAY 25: OBJECT-ORIENTED PROGRAMMING (OOP) - POLYMORPHISM IN PYTHON
- Author: Harish | Repository: DAY-25-OF-PYTHON
- Motto: 'Not here to be known, here to build.'
-======================================================================
-
---- Polymorphism with len() ---
-len(str)  : len('Python OOP')                  -> 10 characters
-len(list) : len([10, 20, 30, 40, 50])       -> 5 items
-
---- Polymorphism with '+' Operator ---
-Integer Addition      : 15 + 25           = 40
-String Concatenation  : 'Hello, ' + 'Dev' = Hello, Dev
-
---- Duck Typing ---
-Testing entity: Duck
-Duck: Quack, quack!
-Duck: Swimming gracefully in the pond.
-
---- Method Overriding ---
-I am Buddy, and I say: Woof! Woof!
-I am Luna, and I say: Meow! Purr!
-
---- Operator Overloading ---
-p1 + p2     = Point(8, 11)
-Total Pages : 1558 pages
-
---- Real-World Payment Gateways ---
-[Credit Card] Charging $149.99 to card ****-****-****-4567... Payment Approved!
-[PayPal] Debited $49.50 from PayPal balance... Order placed successfully!
-[UPI] Transaction Success for $25.00!
-
-======================================================================
- DAY 25 COMPLETE: Polymorphism in Python Mastered Successfully!
- 'Not here to be known, here to build.'
-======================================================================
+### Run the Code
+```bash
+python day26.py
 ```
 
 ---
 
-> *"Not here to be known, here to build."* — **Harish**
+## 🌟 Connect & Learn
+
+- **Author**: Harish
+- **GitHub**: [@harish-0987](https://github.com/harish-0987)
+- **Motto**: *"Not here to be known, here to build."*
+
+Happy Coding! 🚀
